@@ -1,0 +1,66 @@
+buildscript {
+	ext {
+		springBootVersion = '1.2.8.RELEASE'
+		solaceVersion = '7.1+'
+	}
+    repositories {
+    	mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'solace-cf-demo-front-end-app'
+    version =  '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
+	maven {
+        url "file:////solace/loads/maven/repositories/release"
+    }
+    flatDir {
+       dirs 'libs'
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == "org.springframework") {
+                details.useVersion "4.2.0.RELEASE"
+            }
+        }
+    }
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile("org.springframework.cloud:spring-cloud-core:")
+    compile("org.springframework.cloud:spring-cloud-cloudfoundry-connector")
+    compile("org.springframework.cloud:spring-cloud-spring-service-connector")
+    
+    // JCSMP
+    compile("commons-lang:commons-lang:2.6")
+    compile("commons-logging:commons-logging:1.2")
+    compile("com.solacesystems:sol-common:${solaceVersion}")
+    compile("com.solacesystems:sol-jcsmp:${solaceVersion}")
+    
+    compile("org.json:json:20151123")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("com.jayway.jsonpath:json-path:2.1.0")
+    runtime("org.hsqldb:hsqldb")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}

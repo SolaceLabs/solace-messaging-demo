@@ -1,0 +1,49 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {font-size:12px; font-family:'Open Sans', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;}
+
+#form {border-collapse: collapse; margin-bottom:15px;}
+
+#form  th, td {
+    border: 1px solid #023a68; padding:1px 6px 1px 6px; text-align:center;
+}
+#form  th {color:#fff; background-color: #005dab;}
+#form  th.section-title {text-align: left; font-size: 24px;}
+
+#form td.labels {text-align:right; background:#005dab; color:#fff;}
+#form td.fields {text-align:left; background-color: #e7e8ee;}
+#form input[type=text] {border: 1px solid #999; padding:3px; border-radius: 3px; width:50px;}
+
+
+#summary {border-collapse: collapse; margin-bottom:15px;}
+
+#summary  th, td {
+    border: 1px solid #023a68; padding:13px 6px 13px 6px; text-align:center;
+}
+#summary  th {color:#fff; background-color: #005dab;}
+#summary  th.section-title {text-align: left; font-size: 24px;}
+
+#summary td.labels {text-align:right; background:#005dab; color:#fff; padding:7px 6px 7px 6px; }
+#summary td.fields {text-align:left; background-color: #e7e8ee; padding:7px 6px 7px 6px;  width:50px;}
+#summary input[type=text] {border: 1px solid #999; padding:3px; border-radius: 3px; width:50px;}
+
+
+
+#results {border-collapse: collapse;}
+
+#results th, td {
+    border: 1px solid #023a68; padding:1px 6px 1px 6px; text-align:center;
+}
+
+#form th.section-title {text-align: left; font-size: 24px;}
+#results th.section-title {text-align: left; font-size: 24px; padding:10px}
+
+
+#results th {color:#fff; background-color: #005dab;}
+#results tr {background-color: #e7e8ee;}
+#results tr:nth-child(even) {background-color: #cccedc;}
+#results td.narrow-fixed-width {width:100px;}
+
+#results tr:hover {background-color: #aaafd5}
+

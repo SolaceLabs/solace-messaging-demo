@@ -1,0 +1,68 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.0.RELEASE'
+		solaceVersion = '7.1.2.251'
+		solaceCloudVersion = '0.1.0-SNAPSHOT'
+	}
+    repositories {
+    	mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'solace-cf-demo-back-end-app'
+    version =  '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
+	maven {
+        url "http://apps-jenkins:9090/nexus/content/groups/stable"
+    }
+    flatDir {
+       dirs 'libs'
+    }
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile('org.springframework.boot:spring-boot-starter-cloud-connectors')
+	
+    // JCSMP
+    compile("org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1")
+    compile("commons-lang:commons-lang:2.6")
+    compile("commons-logging:commons-logging:1.2")
+    compile("com.solacesystems:sol-common:${solaceVersion}")
+    compile("com.solacesystems:sol-jcsmp:${solaceVersion}")
+    
+    // Solace Cloud
+    compile("com.solace.labs.cloud.cloudfoundry:solace-labs-spring-cloud-connector:${solaceCloudVersion}")
+    
+    
+    compile("org.json:json:20151123")
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    testCompile("com.jayway.jsonpath:json-path:2.1.0")
+    runtime("org.hsqldb:hsqldb")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR4"
+	}
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}
