@@ -175,7 +175,7 @@ public class SolaceController {
 		Cloud cloud = cloudFactory.getCloud();
 		
 		SolaceMessagingInfo solaceMessagingServiceInfo =
-				(SolaceMessagingInfo) cloud.getServiceInfo("solace-messaging-sample-instance");
+				(SolaceMessagingInfo) cloud.getServiceInfo("solace-messaging-demo-instance");
 		
 		if (solaceMessagingServiceInfo == null) {
 			trace.error("Did not find instance of 'solace-messaging' service");

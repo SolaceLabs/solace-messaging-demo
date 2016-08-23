@@ -3,3 +3,5 @@ applications:
 - name: cf-solace-messaging-demo-worker-app
   memory: 512M
   path: build/libs/cf-solace-messaging-demo-worker-app.jar
+  services:
+  - solace-messaging-demo-instance
