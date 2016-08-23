@@ -1,5 +1,5 @@
 ---
 applications:
-- name: solace-cf-demo-back-end-app
+- name: cf-solace-messaging-demo-worker-app
   memory: 512M
-  path: build/libs/solace-cf-demo-back-end-app-0.0.1-SNAPSHOT.jar
+  path: build/libs/cf-solace-messaging-demo-worker-app.jar

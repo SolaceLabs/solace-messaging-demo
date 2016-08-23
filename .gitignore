@@ -3,12 +3,11 @@
 .settings
 .springBeans
 .gradle
+.DS_Store
 images/
-java-app/build/
-java-app/bin/
+worker/build/
+aggregator/build/
 _site
 bin/
-spring-cloud/bin/
-spring-cloud/build/
 *.iml
-libs/
+solace-libs/

@@ -1,8 +1,8 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.0.RELEASE'
-		solaceVersion = '7.1.2.251'
-		solaceCloudVersion = '0.1.0-SNAPSHOT'
+		springBootVersion = '1.3.3.RELEASE'
+		solaceJCSMPVersion = '7.2.2.37'
+		solaceCloudVersion = '0.1+'
 	}
     repositories {
     	mavenCentral()
@@ -18,51 +18,33 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'solace-cf-demo-back-end-app'
-    version =  '0.0.1-SNAPSHOT'
+    baseName = 'cf-solace-messaging-demo-worker-app'
+    version =  ''
 }
 
 repositories {
     mavenCentral()
-	maven {
-        url "http://apps-jenkins:9090/nexus/content/groups/stable"
-    }
-    flatDir {
-       dirs 'libs'
+    maven {
+        url "https://oss.sonatype.org/content/groups/staging"
     }
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-actuator")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("org.springframework.boot:spring-boot-starter-data-rest")
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-security")
-    compile('org.springframework.boot:spring-boot-starter-cloud-connectors')
+    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    
+	// Spring Cloud Connectors
+	compile("org.springframework.boot:spring-boot-starter-cloud-connectors:${springBootVersion}")
 	
+    // Solace Messaging Spring Cloud Connector
+ 	compile("com.solace.labs.cloud.cloudfoundry:solace-labs-spring-cloud-connector:${solaceCloudVersion}")
+    
     // JCSMP
-    compile("org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1")
-    compile("commons-lang:commons-lang:2.6")
-    compile("commons-logging:commons-logging:1.2")
-    compile("com.solacesystems:sol-common:${solaceVersion}")
-    compile("com.solacesystems:sol-jcsmp:${solaceVersion}")
-    
-    // Solace Cloud
-    compile("com.solace.labs.cloud.cloudfoundry:solace-labs-spring-cloud-connector:${solaceCloudVersion}")
-    
+    compile("com.solacesystems:sol-jcsmp:${solaceJCSMPVersion}")
     
     compile("org.json:json:20151123")
-    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
-    testCompile("com.jayway.jsonpath:json-path:2.1.0")
-    runtime("org.hsqldb:hsqldb")
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR4"
-	}
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.14'
 }
