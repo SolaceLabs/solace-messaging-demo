@@ -2,7 +2,7 @@
 
 **TODO**
 
-![](aggregator/src/main/resources/demo-overview.png)
+![](aggregator/src/main/resources/static/demo-overview.png)
 
 ## Common Setup
 
