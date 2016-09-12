@@ -2,206 +2,53 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Solace Cloud Foundry Demo Application</title>
+<title>Solace Messaging in Cloud Foundry</title>
 <link rel="stylesheet" type="text/css" href="demostyle.css"
-	media="screen" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="dashboardStatus.js"></script>
-<script>
-	window.onload = function() {
-		updateStatus();
-	};
-
-	window.setInterval(function() {
-		updateStatus();
-	}, 1000);
-</script>
-
+  media="screen" />
 </head>
 
 <body>
-	<div style="width: 1200px; margin: 0 auto;">
-		<div
-			style="float: left; padding: 10px">
-			<h1>Demo of Solace Messaging as a Service in the Cloud</h1>
-			<h3>Using IBM Bluemix with CloudFoundry as the PaaS</h3>
-				<img src="demo-overview.png"
-					style="float: right; margin: 0 0 0 20px;"
-					height="318" width="600"
-					alt="Demo Diagram" />
-				<p>The goal of this demo is to illustrate Solace Messaging-as-a-Service integration with CloudFoundry 
-				   using an IBM Bluemix environment. Solace is uniquely positioned to provide a single unifying digital 
-				   backbone for applications no matter how the connect whether it’s in the public cloud, hybrid cloud, 
-				   and private cloud. To learn more check out the <a href="http://dev.solacesystems.com">Solace Developer 
-				   Portal</a></p>
-				<p>This demo is an example of a worker offload pattern and is composed of the following parts:</p>
-				<ol>
-					<li>
-						A RESTful Web Application receives incoming requests. In this demo, the job requests are  
-					    described in terms of amount of work, rate to send the work to the Backend applications, 
-					    and the min and maximum delay the Backend system should use to simulate the work.
-					</li>
-					<li>
-						The web application sends the requests to a non-exclusive queue on a Solace VMR which is 
-						running as a VM in IBM Bluemix.
-					</li>
-					<li>
-						Backend worker applications are bound to the Solace queue and process work requests. Backend 
-						applications can be horizontally scaled using CloudFoundry CLI. Increasing the scale will 
-						increase the overall processing throughput of the system.
-					</li>
-					<li>
-						Once done the work, the Backend applications respond to the request. The Web Application tracks 
-						status for each job and keeps statistics which is displayed in the global stats and summary table below.
-					</li>
-					<li>
-						The Web App and Backend Applications depend on a Solace Messaging Service. This service is 
-						provided within CloudFoundry by a Solace Demo Service broker which is itself a CloudFoundry 
-						application.
-					</li>
-					<li>
-						All of the applications are stages and started through the regular CloudFoundry admin CLI.
-					</li>
-				</ol>
-		</div>
-		<div style="float: left; border-top: 1px solid #777777; padding: 10px">
-			<div style="float: left; margin-right: 15px;">
+  <div style="width: 1200px; margin: 0 auto;">
+    <div>
+      <ul class="nav">
+        <li class="nav"><a href="index.html">Home</a></li>
+        <li class="nav"><a href="demo.html">Demo</a></li>
+        <li class="nav"><a href="https://github.com/mdspielman/cf-solace-messaging-demo" target="_blank">GitHub</a></li>
+      </ul>
+    </div>
 
-				<form id="add-job-form" method="GET" onsubmit="addJob()"
-					action="index.html">
+    <div style="float: left; padding: 10px">
+      <h1>Horizontal Scaling of Aggregated Microservices</h1>
+      <h3>Using Solace Messaging in Cloud Foundry</h3>
+      <img src="demo-overview.png"
+        style="float: right; margin: 0 0 0 20px;" width="600"
+        alt="Demo Diagram" />
+      <p>
+        You can see the project <a href="https://github.com/mdspielman/cf-solace-messaging-demo">README</a> for more details. The goal of this demo is to illustrate the Aggregator Microservice Design Pattern using an event driven architecture with messaging to communicate between Microservices, specifically Solace Messaging in Pivotal Cloud Foundry.
 
-					<table id="form">
-						<tr>
-							<th colspan="2" class="section-title">Add a Job</th>
-						</tr>
-						<tr>
-							<td class="labels">Job ID</td>
-							<td class="fields"><input type="text" required name="job-id"
-								id="job-id"></td>
-						</tr>
-						<tr>
-							<td class="labels">Work Count</td>
-							<td class="fields"><input type="text" required
-								name="work-count" id="work-count"></td>
-						</tr>
-						<tr>
-							<td class="labels">Send Rate</td>
-							<td class="fields"><input type="text" required
-								name="send-rate" id="send-rate"> messages/second</td>
-						</tr>
-						<tr>
-							<td class="labels">Minimum Delay<br></td>
-							<td class="fields"><input type="text" required
-								name="delay-min" id="delay-min"> milliseconds</td>
-						</tr>
-						<tr>
-							<td class="labels">Maximum Delay<br></td>
-							<td class="fields"><input type="text" required
-								name="delay-max" id="delay-max"> milliseconds</td>
-						</tr>
-						<tr>
-							<td class="labels">&nbsp;</td>
-							<td class="fields"><button type="submit">Add Job</button></td>
-						</tr>
-					</table>
-				</form>
+        Here are some interesting links if you're new to these concepts:
+      </p>
+      <ul>
+        <li><a href="http://martinfowler.com/articles/microservices.html">Martin Fowler on Microservices</a></li>
+        <li><a href="http://blog.arungupta.me/microservice-design-patterns/">A intro to Microservices Design Patterns</a></li>
+        <li><a href="http://www.slideshare.net/ewolff/rest-vs-messaging-for-microservices">REST vs Messaging for Microservices</a></li>
+        <li><a href="https://network.pivotal.io/">Pivotal Network</a></li>
+        <li><a href="http://docs.pivotal.io/solace-messaging/">Solace Messaging for Pivotal Cloud Foundry Documentation</a></li>
+        <li><a href="http://dev.solacesystems.com">The Solace Developer Portal</a></li>
+      </ul>
 
-			</div>
-			<div style="float: left; margin-right: 15px;">
-
-				<table id="summary">
-					<tr>
-						<th colspan="2" class="section-title">Summary</th>
-					</tr>
-					<tr>
-						<td class="labels">Total Jobs</td>
-						<td class="fields" id="total_jobs"></td>
-					</tr>
-					<tr>
-						<td class="labels">Finished Jobs</td>
-						<td class="fields" id="finished_jobs"></td>
-					</tr>
-					<tr>
-						<td class="labels">Work Requests Sent<br></td>
-						<td class="fields" id="total_requests_sent"></td>
-					</tr>
-					<tr>
-						<td class="labels">Work Request Responses<br></td>
-						<td class="fields" id="total_responses_received"></td>
-					</tr>
-				</table>
-			</div>
-
-			<div style="float: left;">
-				<div style="fload: left; margin-bottom: 15px;">
-					<input type="submit" name="clear-completed"
-						id="clear-completed-button" value="Clear Completed"
-						onclick="clearComplete()">
-				</div>
-				<div>
-					<input type="submit" name="reset-stats" id="reset-stats-button"
-						value="Reset Stats" onclick="resetSummary()">
-				</div>
-			</div>
-			<div style="clear: both; float: left;">
-				<table id="results">
-					<thead>
-						<tr>
-							<th colspan="5" class="section-title">Job Requests</th>
-							<th style="width: 5px;"></th>
-							<th colspan="15" class="section-title">Job Summaries</th>
-						</tr>
-						<tr>
-							<th class="narrow-fixed-width">Job<br> ID
-							</th>
-							<th class="narrow-fixed-width">Work<br> Count
-							</th>
-							<th class="narrow-fixed-width"><p>
-									Rate <br> (msgs/sec)
-								</p></th>
-							<th colspan="2">Delay<br> (millisecs)
-							</th>
-							<th>&nbsp;</th>
-							<th class="narrow-fixed-width">Status</th>
-							<th colspan="4">Request<br> Stats
-							</th>
-							<th colspan="3">Responses</th>
-							<th class="narrow-fixed-width">Calc Rate<br> (msgs/sec)
-							</th>
-							<th colspan="6">Latency<br> (seconds)
-							</th>
-						</tr>
-						<tr>
-							<th>&nbsp;</th>
-							<th>&nbsp;</th>
-							<th>&nbsp;</th>
-							<th class="narrow-fixed-width">Min</th>
-							<th class="narrow-fixed-width">Max</th>
-							<th>&nbsp;</th>
-							<th>&nbsp;</th>
-							<th class="narrow-fixed-width">Sent</th>
-							<th class="narrow-fixed-width">Ack'd</th>
-							<th class="narrow-fixed-width">Errors</th>
-							<th class="narrow-fixed-width">Pending</th>
-							<th class="narrow-fixed-width">OK</th>
-							<th class="narrow-fixed-width">Err</th>
-							<th class="narrow-fixed-width">Pending</th>
-							<th>&nbsp;</th>
-							<th class="narrow-fixed-width">Min</th>
-							<th class="narrow-fixed-width">Avg</th>
-							<th class="narrow-fixed-width">95th</th>
-							<th class="narrow-fixed-width">99th</th>
-							<th class="narrow-fixed-width">Max</th>
-							<th class="narrow-fixed-width">Std. Dev.</th>
-						</tr>
-					</thead>
-					<tbody id="results_body">
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
-	<p id="time" align="right">TIME</p>
+      <p>
+        This demo is composed of the following parts:
+      </p>
+      <ol>
+        <li>A RESTful Web Application receives incoming requests. In this demo, the job requests are number of work units, rate, and delay characteristics.</li>
+        <li>The work requests are sent to a non-exclusive queue in the Solace Messaging Service.</li>
+        <li>The worker applications process messages from the Solace queue. The application can be horizontally scaled using Cloud Foundry to increase the overall processing throughput of the system.</li>
+        <li>When a Worker is done with a work request, it sends the response. For the purposes of this demo, the Aggregator Application
+          tracks and displays status of each job in the summary table below.</li>
+        <li>The Aggregator Application and Worker Applications depend on a Solace Messaging Service for Cloud Foundry.</li>
+        <li>All of the apps are pushed to Cloud Foundry through the CLI or Pivotal Apps Manager.</li>
+      </ol>
+    </div>
 </body>
 </html>

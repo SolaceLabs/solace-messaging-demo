@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Solace Messaging in Cloud Foundry</title>
+<link rel="stylesheet" type="text/css" href="demostyle.css"
+  media="screen" />
+<script
+  src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="dashboardStatus.js"></script>
+<script>
+  window.onload = function() {
+    updateStatus();
+  };
+
+  window.setInterval(function() {
+    updateStatus();
+  }, 1000);
+</script>
+
+</head>
+
+<body>
+  <div style="width: 1200px; margin: 0 auto;">
+    <div>
+      <ul class="nav">
+        <li class="nav"><a href="index.html">Home</a></li>
+        <li class="nav"><a href="demo.html">Demo</a></li>
+        <li class="nav"><a href="https://github.com/mdspielman/cf-solace-messaging-demo" target="_blank">GitHub</a></li>
+      </ul>
+    </div>
+    <div style="float: left; border-top: 1px solid #777777; padding: 10px">
+      <div style="float: left; margin-right: 15px;">
+
+        <form id="add-job-form" method="GET" onsubmit="addJob()"
+          action="index.html">
+
+          <table id="form">
+            <tr>
+              <th colspan="2" class="section-title">Add a Job</th>
+            </tr>
+            <tr>
+              <td class="labels">Job ID</td>
+              <td class="fields"><input type="text" required name="job-id"
+                id="job-id"></td>
+            </tr>
+            <tr>
+              <td class="labels">Work Count</td>
+              <td class="fields"><input type="text" required
+                name="work-count" id="work-count"></td>
+            </tr>
+            <tr>
+              <td class="labels">Send Rate</td>
+              <td class="fields"><input type="text" required
+                name="send-rate" id="send-rate"> messages/second</td>
+            </tr>
+            <tr>
+              <td class="labels">Minimum Delay<br></td>
+              <td class="fields"><input type="text" required
+                name="delay-min" id="delay-min"> milliseconds</td>
+            </tr>
+            <tr>
+              <td class="labels">Maximum Delay<br></td>
+              <td class="fields"><input type="text" required
+                name="delay-max" id="delay-max"> milliseconds</td>
+            </tr>
+            <tr>
+              <td class="labels">&nbsp;</td>
+              <td class="fields"><button type="submit">Add Job</button></td>
+            </tr>
+          </table>
+        </form>
+
+      </div>
+      <div style="float: left; margin-right: 15px;">
+
+        <table id="summary">
+          <tr>
+            <th colspan="2" class="section-title">Summary</th>
+          </tr>
+          <tr>
+            <td class="labels">Total Jobs</td>
+            <td class="fields" id="total_jobs"></td>
+          </tr>
+          <tr>
+            <td class="labels">Finished Jobs</td>
+            <td class="fields" id="finished_jobs"></td>
+          </tr>
+          <tr>
+            <td class="labels">Work Requests Sent<br></td>
+            <td class="fields" id="total_requests_sent"></td>
+          </tr>
+          <tr>
+            <td class="labels">Work Request Responses<br></td>
+            <td class="fields" id="total_responses_received"></td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="float: left;">
+        <div style="fload: left; margin-bottom: 15px;">
+          <input type="submit" name="clear-completed"
+            id="clear-completed-button" value="Clear Completed"
+            onclick="clearComplete()">
+        </div>
+        <div>
+          <input type="submit" name="reset-stats" id="reset-stats-button"
+            value="Reset Stats" onclick="resetSummary()">
+        </div>
+      </div>
+      <div style="clear: both; float: left;">
+        <table id="results">
+          <thead>
+            <tr>
+              <th colspan="5" class="section-title">Job Requests</th>
+              <th style="width: 5px;"></th>
+              <th colspan="15" class="section-title">Job Summaries</th>
+            </tr>
+            <tr>
+              <th class="narrow-fixed-width">Job<br> ID
+              </th>
+              <th class="narrow-fixed-width">Work<br> Count
+              </th>
+              <th class="narrow-fixed-width"><p>
+                  Rate <br> (msgs/sec)
+                </p></th>
+              <th colspan="2">Delay<br> (millisecs)
+              </th>
+              <th>&nbsp;</th>
+              <th class="narrow-fixed-width">Status</th>
+              <th colspan="4">Request<br> Stats
+              </th>
+              <th colspan="3">Responses</th>
+              <th class="narrow-fixed-width">Calc Rate<br> (msgs/sec)
+              </th>
+              <th colspan="6">Latency<br> (seconds)
+              </th>
+            </tr>
+            <tr>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+              <th class="narrow-fixed-width">Min</th>
+              <th class="narrow-fixed-width">Max</th>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+              <th class="narrow-fixed-width">Sent</th>
+              <th class="narrow-fixed-width">Ack'd</th>
+              <th class="narrow-fixed-width">Errors</th>
+              <th class="narrow-fixed-width">Pending</th>
+              <th class="narrow-fixed-width">OK</th>
+              <th class="narrow-fixed-width">Err</th>
+              <th class="narrow-fixed-width">Pending</th>
+              <th>&nbsp;</th>
+              <th class="narrow-fixed-width">Min</th>
+              <th class="narrow-fixed-width">Avg</th>
+              <th class="narrow-fixed-width">95th</th>
+              <th class="narrow-fixed-width">99th</th>
+              <th class="narrow-fixed-width">Max</th>
+              <th class="narrow-fixed-width">Std. Dev.</th>
+            </tr>
+          </thead>
+          <tbody id="results_body">
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+  
+</body>
+</html>
