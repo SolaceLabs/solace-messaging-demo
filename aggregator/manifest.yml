@@ -1,7 +1,0 @@
----
-applications:
-- name: cf-solace-messaging-demo-aggregator-app
-  memory: 512M
-  path: build/libs/cf-solace-messaging-demo-aggregator-app.jar
-  services:
-  - solace-messaging-demo-instance

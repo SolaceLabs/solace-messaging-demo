@@ -1,10 +1,25 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 
 function updateStatus() {
-    var d = new Date();
-    var t = d.toLocaleTimeString();
-    document.getElementById("time").innerHTML = t;
-
-	getJobResults();
+    getJobResults();
 	getSummary();
 }
 
@@ -46,7 +61,7 @@ function createResultsRow(job) {
 
 function getJobResults() {
 	$.ajax({
-        url: "/v1/workerOffloadDemo/stats/jobs",
+        url: "/status",
     	success: function(data) {
     		var jobsJson = data.jobs;
             var resultsBody = "";
@@ -55,6 +70,12 @@ function getJobResults() {
             }
             
         	document.getElementById("results_body").innerHTML = resultsBody
+        	
+        	if (data.connected) {
+        		document.getElementById("solace_connection").innerHTML = "Yes";
+        	} else {
+        		document.getElementById("solace_connection").innerHTML = "No";
+        	}
         },
         error: function(xhr, status, error) {
         	console.log(xhr.responseText);
@@ -64,7 +85,7 @@ function getJobResults() {
 
 function getSummary() {
 	$.ajax({
-        url: "/v1/workerOffloadDemo/stats/global",
+        url: "/stats/global",
         success: function(data) {
         	document.getElementById("total_jobs").innerHTML = data.totalJobs;
             document.getElementById("finished_jobs").innerHTML = data.finishedJobs;
@@ -79,7 +100,7 @@ function getSummary() {
 
 function resetSummary() {
 	$.ajax({
-        url: "/v1/workerOffloadDemo/stats/global",
+        url: "/stats/global",
         type: 'DELETE'
     }).then(function(data, status, jqxhr) {
     	console.log(jqxhr);
@@ -88,7 +109,7 @@ function resetSummary() {
 
 function clearComplete() {
 	$.ajax({
-        url: "/v1/workerOffloadDemo/jobs",
+        url: "/jobs",
         type: 'DELETE'
     }).then(function(data, status, jqxhr) {
     	console.log(jqxhr);
@@ -105,7 +126,7 @@ function addJob() {
     };
     
     $.ajax({
-        url: "/v1/workerOffloadDemo/jobs",
+        url: "/jobs",
         contentType: "application/json; charset=utf-8",
         type: 'post',
         dataType: "json",

@@ -12,16 +12,24 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatusSummary {
 
+    @JsonSerialize
+    private final boolean isConnected;
+    
 	@NotEmpty
 	@JsonSerialize
 	private final List<JobSummary> jobs;
 	
-	public StatusSummary(List<JobSummary> jobs) {
+	public StatusSummary(List<JobSummary> jobs, boolean isConnected) {
 		this.jobs = jobs;
+		this.isConnected = isConnected;
 	}
 
 	public List<JobSummary> getJobs() {
 		return jobs;
+	}
+	
+	public boolean isConnected() {
+	    return isConnected;
 	}
 
 }

@@ -34,22 +34,14 @@ import com.solace.demos.cloudfoundry.scaling.aggregator.model.JobRequest;
 import com.solace.demos.cloudfoundry.scaling.aggregator.model.StatusSummary;
 
 @RestController
-public class WorkerOffloadDemoController {
+public class AggregatorController {
 
-	Log log = LogFactory.getLog(WorkerOffloadDemoController.class);
+	Log log = LogFactory.getLog(AggregatorController.class);
 
 	@Autowired
 	SolaceController solaceController;
-
-	@RequestMapping(value = "/v1/workerOffloadDemo/jobsForm", method = RequestMethod.POST)
-	public ResponseEntity<String> createJobsForm() {
-
-		log.warn("In JobsForm");
-		
-		return new ResponseEntity<>("{}", HttpStatus.OK);
-	}
 	
-	@RequestMapping(value = "/v1/workerOffloadDemo/jobs", method = RequestMethod.POST)
+	@RequestMapping(value = "/jobs", method = RequestMethod.POST)
 	public ResponseEntity<String> createJobs(@RequestBody JobRequest jobRequest) {
 
 		log.warn("Entering createJobs");
@@ -62,7 +54,7 @@ public class WorkerOffloadDemoController {
 		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/v1/workerOffloadDemo/jobs", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/jobs", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteJobs() {
 		
 		log.warn("Entering deleteJobs");
@@ -71,17 +63,17 @@ public class WorkerOffloadDemoController {
 	}
 
 
-	@RequestMapping("/v1/workerOffloadDemo/stats/jobs")
-	public StatusSummary jobs() {
+	@RequestMapping("/status")
+	public StatusSummary getStatus() {
 		return solaceController.getStatus();
 	}
 	
-	@RequestMapping("/v1/workerOffloadDemo/stats/global")
+	@RequestMapping("/stats/global")
 	public GlobalStats getSolaceStatus() {
 		return solaceController.getGlobalStats();
 	}
 	
-	@RequestMapping(value = "/v1/workerOffloadDemo/stats/global", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/stats/global", method = RequestMethod.DELETE)
 	public ResponseEntity<String> resetSolaceStatus() {
 		log.warn("Entering deleteJobs");
 		solaceController.resetGlobalStats();

@@ -55,7 +55,8 @@ public class SolaceController {
 	private static final Log trace = LogFactory.getLog(SolaceController.class);
 
 	private JCSMPSession session;
-
+	boolean isSolaceConnected = false;
+	
 	private final int NUM_PUBLISH_THREADS = 5;
 	private ExecutorService executor;
 	private Destination destForPublish;
@@ -64,7 +65,7 @@ public class SolaceController {
 
 	@PostConstruct
 	public void init() {
-		// Connect to Solace
+	    // Connect to Solace
 		trace.info("************* Init Called ************");
 		trace.info(System.getenv("VCAP_SERVICES"));
 
@@ -94,6 +95,7 @@ public class SolaceController {
 
 			destForPublish = JCSMPFactory.onlyInstance().createQueue("Q/demo/requests");
 
+			isSolaceConnected = true;
 			System.out.println("************* Solace initialized correctly!! ************");
 
 		} catch (Exception e) {
@@ -171,7 +173,7 @@ public class SolaceController {
 
 			jobsList.add(job.getSummary());
 		}
-		return new StatusSummary(jobsList);
+		return new StatusSummary(jobsList, isSolaceConnected);
 	}
 
 	public GlobalStats getGlobalStats() {

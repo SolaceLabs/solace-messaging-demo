@@ -50,7 +50,7 @@ import com.solacesystems.jcsmp.XMLMessageProducer;
 
 public class ProducerThread implements Runnable {
 
-	Log log = LogFactory.getLog(WorkerOffloadDemoController.class);
+	Log log = LogFactory.getLog(AggregatorController.class);
 
 	String jobId;
 	private List<WorkInstance> workQueue;
