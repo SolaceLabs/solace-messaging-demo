@@ -55,24 +55,58 @@ You need to deploy both the Aggregator and Worker application to Cloud Foundry. 
     
 ## Demo Components
 
-**TODO**
+As shown in the overview, this demo is made up of two Cloud Foundry applications. Both are Spring Boot Java Applications which make use of the [Solace Messaging Spring Cloud Connectors Extention](https://github.com/SolaceLabs/sl-spring-cloud-connectors) to establish the connection to Solace Messaging. The two applications are:
+
+* Aggregator
+* Worker
 
 ### Aggregator
 
 application name: `cf-solace-messaging-demo-aggregator-app`
 
-**TODO**
+This application is a web based application that serves a simple web page. In that web pages you can enter requests which for this demo are described as `jobs`. The application then sends the requests as messages on the Solace Messaging service and it waits and correlates the subsequent replies.
 
 ### Worker
 
 application name: `cf-solace-messaging-demo-worker-app`
 
-**TODO**
+The worker application is a Solace Messaging application that binds and listens to a Solace Non-Exclusive Queue. When it receives requests, it parses them, finds the work contents and simulates work by sleeping based on the parameters in the request. Once done it sends a correlated response back to the Solace Messaging Service to notify the Aggregator application.
 
 ## Using the Demo
 
-**TODO**
+### Accessing the Web UI
 
+You can access the demo Web UI, by browsing to the Aggregator application's URL. You can find this URL from Pivotal Apps Manager or through the Cloud Foundry CLI as follows:
+
+	$ cf apps
+	Getting apps in org demo / space demo as demoUser...
+	OK
+
+	name                                      requested state   instances   memory   disk   urls
+	cf-solace-messaging-demo-aggregator-app   started           1/1         512M     1G     cf-solace-messaging-demo-aggregator-app.cloudfoundry.io
+	cf-solace-messaging-demo-worker-app       started           1/1         512M     1G     cf-solace-messaging-demo-worker-app.cloudfoundry.io
+
+In this case the URL would be:
+
+	cf-solace-messaging-demo-aggregator-app.cloudfoundry.io
+
+The Web UI will look similar to this:
+
+![Web UI Image](resources/web-ui.png)
+
+### Adding a job
+
+To add a new job, you fill in the web form by adding the following:
+
+* Unique Job ID
+* Work Count - This equates to number of messages to sent.
+* Send Rate - How fast the Aggregator should send the messages. Sending faster than the workers can process creates a work backlog in the Solace queue. This is evident in the UI through larger than expected latency. 
+* Min Delay - The lower bound for work delays. For each work message, the Aggregator will assign a random delay between the min and max.
+* Max Delay - The upper bound for work delays.
+
+### Understanding the Demo
+
+Once a Job is added to the system, you will see it in the summary table at the bottom. Under Job Requests, the Aggregator status is reflected. The Job Summaries, provides insight into how quickly responses are coming back from the Worker Applications. If you create a scenario where the work is being sent faster than it can be produced (the send rate is faster than the min delay), the you can use the CF scale command to scale the Worker applications and increase the overall throughput of the system. This is the horizontal scaling aspect of the demo.
 
 ## Contributing
 
