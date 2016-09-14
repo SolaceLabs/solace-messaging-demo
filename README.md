@@ -1,4 +1,5 @@
-# cf-solace-messaging-demo
+# Horizontal Scaling of Aggregated Microservices
+## Using Solace Messaging in Cloud Foundry
 
 The goal of this demo is to illustrate a real world example of using messaging between microservices in the cloud. This demo illustrates the Aggregator Microservice Design Pattern using an event driven architecture with messaging to communicate between Microservices, specifically Solace Messaging in Pivotal Cloud Foundry. 
 
