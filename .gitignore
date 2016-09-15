@@ -10,4 +10,5 @@ aggregator/build/
 _site
 bin/
 *.iml
-solace-libs/
+libs/
+
