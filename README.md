@@ -44,15 +44,13 @@ The demo applications specify a dependency on a Solace Messaging service instanc
 
 ### Building
 
-Clone this GitHub repository. Then aquire the Solace Java API. Until the Solace Java API is available in Maven Central, you can [download the Java API here](http://dev.solacesystems.com/downloads/). Unpack the API and then copy the contents of the sol-jcsmp-VERSION/lib directory to a `libs` sub-directory in your `cf-solace-messaging-demo` project.
+Clone this GitHub repository and build. For example:
 
-For example in the following command line replace VERSION with the Solace Java API version you downloaded:
-
-1. clone this GitHub repository
-1. `cd cf-solace-messaging-demo`
-1. `mkdir libs`
-1. `cp ../sol-jcsmp-VERSION/lib/* libs`
-1. `./gradlew build`
+```
+  git clone https://github.com/SolaceLabs/sl-cf-solace-messaging-demo.git
+  cd sl-cf-solace-messaging-demo
+  ./gradlew build
+```
 
 ### Deploying to Cloud Foundry
 
@@ -121,7 +119,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Authors
 
-See the list of [contributors](https://github.com/mdspielman/cf-solace-messaging-demo/contributors) who participated in this project.
+See the list of [contributors](https://github.com/SolaceLabs/sl-cf-solace-messaging-demo/graphs/contributors) who participated in this project.
 
 ## License
 
