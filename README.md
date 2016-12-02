@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SolaceLabs/sl-cf-solace-messaging-demo.svg?branch=master)](https://travis-ci.org/SolaceLabs/sl-cf-solace-messaging-demo)
+
 # Horizontal Scaling of Aggregated Microservices
 ## Using Solace Messaging in Cloud Foundry
 
