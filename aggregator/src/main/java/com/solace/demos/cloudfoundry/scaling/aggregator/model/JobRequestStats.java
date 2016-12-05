@@ -31,11 +31,6 @@ public class JobRequestStats {
 
 	private static final Log trace = LogFactory.getLog(JobRequestStats.class);
 	
-	// Used in order checking.  -1 is taken by default stream.  Next special 
-	// stream is chosen as -2.
-	public static final Integer C_DEFAULT_STREAM_ID = -1;
-	public static final Integer C_TOPIC_SEQUENCE_STREAM_ID = -2;
-	
 	private EnumMap<PerfStatType, MutableLong> _stats = 
 		new EnumMap<PerfStatType, MutableLong>(PerfStatType.class);
 	long _receiveStartTimeInNanos, _receiveEndTimeInNanos, _totalLatency;

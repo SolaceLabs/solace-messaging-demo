@@ -257,8 +257,8 @@ public class ProducerThread implements Runnable {
 						cntPublished));
 			}
 
-			// Wait for all acks and responses to be processed.
-			int guard = 100;
+			// Wait for all acks and responses to be processed. Wait up to 10 min.
+			int guard = 1200;
 			while (!jobStatus.isJobComplete() && guard > 0) {
 				Thread.sleep(500);
 				guard--;
