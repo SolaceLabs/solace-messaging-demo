@@ -140,7 +140,7 @@ public class SolaceController {
 				reply.setText(jsonMapper.writeValueAsString(workResponse));
 				reply.setDeliveryMode(DeliveryMode.PERSISTENT);
 				
-				System.out.println("*** About to send response: "+ jsonMapper.writeValueAsString(workResponse));
+				trace.debug("*** About to send response: "+ jsonMapper.writeValueAsString(workResponse));
 				
 				producer.sendReply(request, reply);
 				

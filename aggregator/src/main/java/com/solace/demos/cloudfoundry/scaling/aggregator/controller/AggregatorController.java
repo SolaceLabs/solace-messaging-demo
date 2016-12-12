@@ -75,7 +75,7 @@ public class AggregatorController {
 	
 	@RequestMapping(value = "/stats/global", method = RequestMethod.DELETE)
 	public ResponseEntity<String> resetSolaceStatus() {
-		log.warn("Entering deleteJobs");
+		log.warn("Entering resetSolaceStatus");
 		solaceController.resetGlobalStats();
 		return new ResponseEntity<>("{}", HttpStatus.OK);
 	}

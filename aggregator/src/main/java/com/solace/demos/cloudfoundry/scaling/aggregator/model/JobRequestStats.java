@@ -45,8 +45,8 @@ public class JobRequestStats {
 	
 	public JobRequestStats(JobRequest jobRequest) {
 		// Pick some reasonable defaults for our use case.
-	    // This means buckets are 131 msec in size for a max latency of around 4.5 min.  
-		this(jobRequest, 2048, 15, 0);
+	    // This means buckets are 260 msec in size for a max latency of around 17 min.  
+		this(jobRequest, 4096, 16, 0);
 	}
 	
 	public JobRequestStats(
