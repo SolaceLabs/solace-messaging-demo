@@ -136,4 +136,4 @@ Here are some interesting links if you're new to these concepts:
 * [REST vs Messaging for Microservices](http://www.slideshare.net/ewolff/rest-vs-messaging-for-microservices)
 * [Pivotal Network](https://network.pivotal.io/)
 * [Solace Messaging for Pivotal Cloud Foundry Documentation](http://docs.pivotal.io/solace-messaging/)
-* [The Solace Developer Portal](http://dev.solacesystems.com/)
+* [The Solace Developer Portal](http://dev.solace.com/)
