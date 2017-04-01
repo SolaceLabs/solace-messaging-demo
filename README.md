@@ -18,8 +18,6 @@ The goal of this demo is to illustrate a real world example of using messaging b
 
 ## Overview
  
-TODO - Architecture diagram and explanation needs an update to reflect new app runtime.
-
 ![Architecture Overview](resources/demo-overview.png)
 
 As illustrated in the architecture diagram above, this demo is composed of the following parts:
@@ -29,7 +27,6 @@ As illustrated in the architecture diagram above, this demo is composed of the f
 3. The worker applications process messages from the Solace queue. The application can be horizontally scaled using Cloud Foundry to increase the overall processing throughput of the system.
 4. When a Worker is done with a work request, it sends the response. For the purposes of this demo, the Aggregator Application tracks and displays status of each job in the summary table below.
 5. The Aggregator Application and Worker Applications depend on a Solace Messaging Service for Cloud Foundry.
-6. All of the apps are pushed to Cloud Foundry through the CLI or Pivotal Apps Manager.
 
 ## Running the Demo
 
