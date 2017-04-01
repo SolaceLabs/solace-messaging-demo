@@ -1,19 +1,9 @@
-description = 'A Cloud Foundry Demo application using Solace Messaging'
+description = 'A demo of messaging based microservices using Solace Messaging'
 
 subprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
-
-	compileJava {
-		sourceCompatibility=1.7
-		targetCompatibility=1.7
-	}
-	compileTestJava {
-		sourceCompatibility=1.8
-		targetCompatibility=1.8
-	}
-
 }
 
 task wrapper(type: Wrapper) {

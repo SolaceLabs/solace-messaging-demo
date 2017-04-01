@@ -1,9 +1,10 @@
-[![Build Status](https://travis-ci.org/SolaceLabs/sl-cf-solace-messaging-demo.svg?branch=master)](https://travis-ci.org/SolaceLabs/sl-cf-solace-messaging-demo)
+# A Demo of Messaging Based MicroServices
+## Using Solace Messaging
 
-# Horizontal Scaling of Aggregated Microservices
-## Using Solace Messaging in Cloud Foundry
+The goal of this demo is to illustrate a real world example of using messaging between microservices in the cloud. This demo illustrates the Aggregator Microservice Design Pattern using an event driven architecture with messaging to communicate between Microservices. 
 
-The goal of this demo is to illustrate a real world example of using messaging between microservices in the cloud. This demo illustrates the Aggregator Microservice Design Pattern using an event driven architecture with messaging to communicate between Microservices, specifically Solace Messaging in Pivotal Cloud Foundry. 
+TODO - Update the remaining summary to based on differences from Fork.
+
 
 ## Contents
 

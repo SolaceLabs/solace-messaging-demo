@@ -33,8 +33,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
-import org.springframework.cloud.Cloud;
-import org.springframework.cloud.CloudFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.solace.demos.cloudfoundry.scaling.aggregator.model.GlobalStats;
@@ -43,11 +42,10 @@ import com.solace.demos.cloudfoundry.scaling.aggregator.model.JobRequestStats;
 import com.solace.demos.cloudfoundry.scaling.aggregator.model.JobSummary;
 import com.solace.demos.cloudfoundry.scaling.aggregator.model.StatusSummary;
 import com.solace.demos.cloudfoundry.scaling.aggregator.model.WorkInstance;
-import com.solace.labs.spring.cloud.core.SolaceMessagingInfo;
 import com.solacesystems.jcsmp.Destination;
 import com.solacesystems.jcsmp.JCSMPFactory;
-import com.solacesystems.jcsmp.JCSMPProperties;
 import com.solacesystems.jcsmp.JCSMPSession;
+import com.solacesystems.jcsmp.SpringJCSMPFactory;
 
 @Component
 public class SolaceController {
@@ -62,36 +60,20 @@ public class SolaceController {
 	private Destination destForPublish;
 	private Map<String, JobRequestStats> jobsTrackingMap = new HashMap<>();
 	private GlobalStats globalStats = new GlobalStats();
+	
+	@Autowired
+    private SpringJCSMPFactory solaceFactory;
+
+    
 
 	@PostConstruct
 	public void init() {
 	    // Connect to Solace
 		trace.info("************* Init Called ************");
-		trace.info(System.getenv("VCAP_SERVICES"));
-
-		CloudFactory cloudFactory = new CloudFactory();
-		Cloud cloud = cloudFactory.getCloud();
-
-		SolaceMessagingInfo solaceMessagingServiceInfo = (SolaceMessagingInfo) cloud
-				.getServiceInfo("solace-messaging-demo-instance");
-
-		if (solaceMessagingServiceInfo == null) {
-			trace.error("Did not find instance of 'solace-messaging' service");
-			trace.error("************* Aborting Solace initialization!! ************");
-			return;
-		}
-
-		trace.info("Solace client initializing and using SolaceMessagingInfo: " + solaceMessagingServiceInfo);
-
-		final JCSMPProperties properties = new JCSMPProperties();
-		properties.setProperty(JCSMPProperties.HOST, solaceMessagingServiceInfo.getSmfHost());
-		properties.setProperty(JCSMPProperties.VPN_NAME, solaceMessagingServiceInfo.getMsgVpnName());
-		properties.setProperty(JCSMPProperties.USERNAME, solaceMessagingServiceInfo.getClientUsername());
-		properties.setProperty(JCSMPProperties.PASSWORD, solaceMessagingServiceInfo.getClientPassword());
-
+		
 		try {
-			session = JCSMPFactory.onlyInstance().createSession(properties);
-			session.connect();
+		    session = solaceFactory.createSession();
+		    session.connect();
 
 			destForPublish = JCSMPFactory.onlyInstance().createQueue("Q/demo/requests");
 
