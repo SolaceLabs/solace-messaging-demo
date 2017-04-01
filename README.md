@@ -3,13 +3,10 @@
 
 The goal of this demo is to illustrate a real world example of using messaging between microservices in the cloud. This demo illustrates the Aggregator Microservice Design Pattern using an event driven architecture with messaging to communicate between Microservices. 
 
-TODO - Update the remaining summary to based on differences from Fork.
-
-
 ## Contents
 
 * [Overview](#overview)
-* [Deploying to Cloud Foundry](#deploying-to-cloud-foundry)
+* [Running the Demo](#running-the-demo)
 * [Demo Components](#demo-components)
 * [Using the Demo](#using-the-demo)
 * [Contributing](#contributing)
@@ -21,6 +18,8 @@ TODO - Update the remaining summary to based on differences from Fork.
 
 ## Overview
  
+TODO - Architecture diagram and explanation needs an update to reflect new app runtime.
+
 ![Architecture Overview](resources/demo-overview.png)
 
 As illustrated in the architecture diagram above, this demo is composed of the following parts:
@@ -32,51 +31,74 @@ As illustrated in the architecture diagram above, this demo is composed of the f
 5. The Aggregator Application and Worker Applications depend on a Solace Messaging Service for Cloud Foundry.
 6. All of the apps are pushed to Cloud Foundry through the CLI or Pivotal Apps Manager.
 
-## Deploying to Cloud Foundry
+## Running the Demo
 
-### Common Setup
+### Project Setup
 
-This demo depends on Solace Messaging for Cloud Foundry being installed and available in the Cloud Foundry marketplace. If that is not already done, use the following links:
+This demo depends on Solace Messaging. You need to add the connectivity details for your Solace messaging into the following two application properties:
 
-* [PCF Tile Download from Pivotal Network](https://network.pivotal.io/)
-* [Solace Messaging for Pivotal Cloud Foundry Documentation](http://docs.pivotal.io/solace-messaging/)
+* aggregator/src/main/resources/application.properties
+* worker/src/main/resources/application.properties
 
-The demo applications specify a dependency on a Solace Messaging service instance named `solace-messaging-demo-instance`. To create the required Solace messaging service instance, do the following:
+For example: 
 
-	cf create-service solace-messaging shared solace-messaging-demo-instance
+```
+solace.java.host=192.168.0.50
+solace.java.msgVpn=default
+solace.java.clientUsername=demo 
+solace.java.clientPassword=demo
+```
 
 ### Building
 
 Clone this GitHub repository and build. For example:
 
 ```
-  git clone https://github.com/SolaceLabs/sl-cf-solace-messaging-demo.git
-  cd sl-cf-solace-messaging-demo
+  git clone https://github.com/mdspielman/solace-messaging-demo.git
+  cd solace-messaging-demo
   ./gradlew build
 ```
 
-### Deploying to Cloud Foundry
+### Launch the MicroServices
 
-You need to deploy both the Aggregator and Worker application to Cloud Foundry. The included manifest.yml can be used to deploy both applications using the Cloud Foundry CLI from the project root directory:
+You need to launch both the Aggregator and Worker application. In separate console windows, start both microservices.
 
-    $ cf push
+#### Worker Application
+
+```
+cd solace-messaging-demo
+cd worker
+../gradlew bootRun
+```
+
+The worker application will startup and connect to Solace Messaging. If you see the follow output in std out, then all went well:
+
+```
+************* Solace initialized correctly!! ************
+```
+
+### Aggregator Application
+
+```
+cd solace-messaging-demo
+cd aggregator
+../gradlew bootRun
+```
+
+The aggregator application will startup and connect to Solace Messaging. It'll also be reachable at `localhost:8090`. If you want to use a different port, update the application.properties file as per the instructions above.
     
 ## Demo Components
 
-As shown in the overview, this demo is made up of two Cloud Foundry applications. Both are Spring Boot Java Applications which make use of the [Solace Messaging Spring Cloud Connectors Extention](https://github.com/SolaceLabs/sl-spring-cloud-connectors) to establish the connection to Solace Messaging. The two applications are:
+As shown in the overview, this demo is made up of two microservice applications. Both are Spring Boot Java Applications which make use of the [solace-java-spring-boot-starter](https://github.com/SolaceLabs/solace-java-spring-boot) to auto configure Solace Messaging. The two applications are:
 
 * Aggregator
 * Worker
 
 ### Aggregator
 
-application name: `cf-solace-messaging-demo-aggregator-app`
-
 This application is a web based application that serves a simple web page. In that web pages you can enter requests which for this demo are described as `jobs`. The application then sends the requests as messages on the Solace Messaging service and it waits and correlates the subsequent replies.
 
 ### Worker
-
-application name: `cf-solace-messaging-demo-worker-app`
 
 The worker application is a Solace Messaging application that binds and listens to a Solace Non-Exclusive Queue. When it receives requests, it parses them, finds the work contents and simulates work by sleeping based on the parameters in the request. Once done it sends a correlated response back to the Solace Messaging Service to notify the Aggregator application.
 
@@ -84,19 +106,7 @@ The worker application is a Solace Messaging application that binds and listens 
 
 ### Accessing the Web UI
 
-You can access the demo Web UI, by browsing to the Aggregator application's URL. You can find this URL from Pivotal Apps Manager or through the Cloud Foundry CLI as follows:
-
-	$ cf apps
-	Getting apps in org demo / space demo as demoUser...
-	OK
-
-	name                                      requested state   instances   memory   disk   urls
-	cf-solace-messaging-demo-aggregator-app   started           1/1         512M     1G     cf-solace-messaging-demo-aggregator-app.cloudfoundry.io
-	cf-solace-messaging-demo-worker-app       started           1/1         512M     1G     cf-solace-messaging-demo-worker-app.cloudfoundry.io
-
-In this case the URL would be:
-
-	cf-solace-messaging-demo-aggregator-app.cloudfoundry.io
+You can access the demo Web UI, by browsing to the Aggregator application's URL. It will be reachable at: `http://localhost:8090` if you kept the default configuration in application.
 
 The Web UI will look similar to this:
 
@@ -122,7 +132,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Authors
 
-See the list of [contributors](https://github.com/SolaceLabs/sl-cf-solace-messaging-demo/graphs/contributors) who participated in this project.
+See the list of [contributors](https://github.com/mdspielman/solace-messaging-demo/graphs/contributors) who participated in this project.
 
 ## License
 
@@ -132,9 +142,8 @@ This project is licensed under the Apache License, Version 2.0. - See the [LICEN
 
 Here are some interesting links if you're new to these concepts:
 
+* [The Solace Developer Portal](http://dev.solacesystems.com/)
+* [Solace Java Spring Boot Starters](https://solace.com/blog/devops/solace-java-meet-spring-boot-starters)
 * [Martin Fowler on Microservices](http://martinfowler.com/articles/microservices.html)
 * [A intro to Microservices Design Patterns](http://blog.arungupta.me/microservice-design-patterns/)
 * [REST vs Messaging for Microservices](http://www.slideshare.net/ewolff/rest-vs-messaging-for-microservices)
-* [Pivotal Network](https://network.pivotal.io/)
-* [Solace Messaging for Pivotal Cloud Foundry Documentation](http://docs.pivotal.io/solace-messaging/)
-* [The Solace Developer Portal](http://dev.solacesystems.com/)

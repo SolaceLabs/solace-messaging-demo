@@ -17,6 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
+
 jar {
     baseName = 'solace-messaging-demo-worker-app'
     version =  ''
