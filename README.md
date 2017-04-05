@@ -3,6 +3,9 @@
 
 The goal of this demo is to illustrate a real world example of using messaging between microservices in the cloud. This demo illustrates the Aggregator Microservice Design Pattern using an event driven architecture with messaging to communicate between Microservices. 
 
+
+### Related project - SolaceLabs/sl-cf-solace-messaging-demo
+
 This project is similar to the following Solace Labs Demo: [SolaceLabs/sl-cf-solace-messaging-demo](https://github.com/SolaceLabs/sl-cf-solace-messaging-demo). The difference is that this project uses the Solace Java Spring Boot project to connect to Solace Messaging and therefore currently is not suited to Cloud Foundry environment. The `SolaceLabs/sl-cf-solace-messaging-demo` project uses the Spring Cloud Connector for Solace Messaging and is currently not suitable outside of Cloud Foundry. Going forward we will move to a single demo which works in both environments and is platform agnostic.
 
 ## Contents
