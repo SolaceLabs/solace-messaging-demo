@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SolaceLabs/solace-messaging-demo.svg?branch=master)](https://travis-ci.org/SolaceLabs/solace-messaging-demo)
+
 # A Demo of Messaging Based MicroServices
 ## Using Solace Messaging
 
