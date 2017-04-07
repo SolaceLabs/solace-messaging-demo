@@ -50,120 +50,118 @@ import com.solacesystems.jcsmp.SpringJCSMPFactory;
 @Component
 public class SolaceController {
 
-	private static final Log trace = LogFactory.getLog(SolaceController.class);
+    private static final Log trace = LogFactory.getLog(SolaceController.class);
 
-	private JCSMPSession session;
-	boolean isSolaceConnected = false;
-	
-	private final int NUM_PUBLISH_THREADS = 5;
-	private ExecutorService executor;
-	private Destination destForPublish;
-	private Map<String, JobRequestStats> jobsTrackingMap = new HashMap<>();
-	private GlobalStats globalStats = new GlobalStats();
-	
-	@Autowired
+    private JCSMPSession session;
+    boolean isSolaceConnected = false;
+
+    private final int NUM_PUBLISH_THREADS = 5;
+    private ExecutorService executor;
+    private Destination destForPublish;
+    private Map<String, JobRequestStats> jobsTrackingMap = new HashMap<>();
+    private GlobalStats globalStats = new GlobalStats();
+
+    @Autowired
     private SpringJCSMPFactory solaceFactory;
 
-    
+    @PostConstruct
+    public void init() {
+        // Connect to Solace
+        trace.info("************* Init Called ************");
 
-	@PostConstruct
-	public void init() {
-	    // Connect to Solace
-		trace.info("************* Init Called ************");
-		
-		try {
-		    session = solaceFactory.createSession();
-		    session.connect();
+        try {
+            session = solaceFactory.createSession();
+            session.connect();
 
-			destForPublish = JCSMPFactory.onlyInstance().createQueue("Q/demo/requests");
+            destForPublish = JCSMPFactory.onlyInstance().createQueue("Q/demo/requests");
 
-			isSolaceConnected = true;
-			System.out.println("************* Solace initialized correctly!! ************");
+            isSolaceConnected = true;
+            System.out.println("************* Solace initialized correctly!! ************");
 
-		} catch (Exception e) {
-			trace.error("Error connecting and setting up session.", e);
-		}
+        } catch (Exception e) {
+            trace.error("Error connecting and setting up session.", e);
+        }
 
-		executor = Executors.newFixedThreadPool(NUM_PUBLISH_THREADS);
+        executor = Executors.newFixedThreadPool(NUM_PUBLISH_THREADS);
 
-	}
+    }
 
-	public void startJobRequest(JobRequest jobRequest) throws Exception {
+    public void startJobRequest(JobRequest jobRequest) throws Exception {
 
-		// Check if job is already running.
-		if (jobsTrackingMap.containsKey(jobRequest.getId())) {
-			throw new Exception("Job ID already in use. Please select unique Job IDs.");
-		}
+        // Check if job is already running.
+        if (jobsTrackingMap.containsKey(jobRequest.getId())) {
+            throw new Exception("Job ID already in use. Please select unique Job IDs.");
+        }
 
-		globalStats.incTotalJobs();
+        globalStats.incTotalJobs();
 
-		List<WorkInstance> workQueue = new ArrayList<>();
+        List<WorkInstance> workQueue = new ArrayList<>();
 
-		Random rn = new Random();
-		for (long i = 0; i < jobRequest.getJobCount(); i++) {
+        Random rn = new Random();
+        for (long i = 0; i < jobRequest.getJobCount(); i++) {
 
-			// Randomly generate work delay
-			int workDelay = rn.nextInt(jobRequest.getMaxWorkDelayInMSec() - jobRequest.getMinWorkDelayInMSec() + 1)
-					+ jobRequest.getMinWorkDelayInMSec();
-			trace.warn("Work delay for Job: " + jobRequest.getId() + " . Item: " + i + " : Workdelay: " + workDelay);
+            // Randomly generate work delay
+            int workDelay = rn.nextInt(jobRequest.getMaxWorkDelayInMSec() - jobRequest.getMinWorkDelayInMSec() + 1)
+                    + jobRequest.getMinWorkDelayInMSec();
+            trace.warn("Work delay for Job: " + jobRequest.getId() + " . Item: " + i + " : Workdelay: " + workDelay);
 
-			// Send time of 0 for now. Will be filled in on send.
-			WorkInstance work = new WorkInstance(i, workDelay, 0, jobRequest.getId());
-			workQueue.add(work);
-		}
+            // Send time of 0 for now. Will be filled in on send.
+            WorkInstance work = new WorkInstance(i, workDelay, 0, jobRequest.getId());
+            workQueue.add(work);
+        }
 
-		JobRequestStats jobStatus = new JobRequestStats(jobRequest);
-		jobsTrackingMap.put(jobRequest.getId(), jobStatus);
+        JobRequestStats jobStatus = new JobRequestStats(jobRequest);
+        jobsTrackingMap.put(jobRequest.getId(), jobStatus);
 
-		// Start a worker thread with the new job.
-		Runnable worker = new ProducerThread(jobRequest.getId(), workQueue, session, destForPublish,
-				jobRequest.getRateInMsgsPerSec(), jobStatus, globalStats);
-		executor.execute(worker);
+        // Start a worker thread with the new job.
+        Runnable worker = new ProducerThread(jobRequest.getId(), workQueue, session, destForPublish,
+                jobRequest.getRateInMsgsPerSec(), jobStatus, globalStats);
+        executor.execute(worker);
 
-	}
+    }
 
-	public void deleteJobs() {
-		// for now only delete jobs that are completed.
-		for (Iterator<Map.Entry<String, JobRequestStats>> it = jobsTrackingMap.entrySet().iterator(); it.hasNext();) {
-			Map.Entry<String, JobRequestStats> entry = it.next();
-			if (entry.getValue().isJobComplete()) {
-				it.remove();
-			}
-		}
+    public void deleteJobs() {
+        // for now only delete jobs that are completed.
+        for (Iterator<Map.Entry<String, JobRequestStats>> it = jobsTrackingMap.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<String, JobRequestStats> entry = it.next();
+            if (entry.getValue().isJobComplete()) {
+                it.remove();
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public synchronized String toString() {
-		// A JSON Object containing full details of the stats.
-		JSONObject jsonString = new JSONObject();
+    @Override
+    public synchronized String toString() {
+        // A JSON Object containing full details of the stats.
+        JSONObject jsonString = new JSONObject();
 
-		List<String> jobsList = new ArrayList<>();
-		for (JobRequestStats job : jobsTrackingMap.values()) {
-			jobsList.add(job.toString());
-		}
+        List<String> jobsList = new ArrayList<>();
+        for (JobRequestStats job : jobsTrackingMap.values()) {
+            jobsList.add(job.toString());
+        }
 
-		jsonString.put("jobs", jobsList);
+        jsonString.put("jobs", jobsList);
 
-		return jsonString.toString();
+        return jsonString.toString();
 
-	}
+    }
 
-	public StatusSummary getStatus() {
-		List<JobSummary> jobsList = new ArrayList<>();
-		for (JobRequestStats job : jobsTrackingMap.values()) {
+    public StatusSummary getStatus() {
+        List<JobSummary> jobsList = new ArrayList<>();
+        for (JobRequestStats job : jobsTrackingMap.values()) {
 
-			jobsList.add(job.getSummary());
-		}
-		return new StatusSummary(jobsList, isSolaceConnected);
-	}
+            jobsList.add(job.getSummary());
+        }
+        return new StatusSummary(jobsList, isSolaceConnected);
+    }
 
-	public GlobalStats getGlobalStats() {
-		return globalStats;
-	}
+    public GlobalStats getGlobalStats() {
+        return globalStats;
+    }
 
-	public void resetGlobalStats() {
-		globalStats.resetStats();
-	}
+    public void resetGlobalStats() {
+        globalStats.resetStats();
+    }
 
 }
